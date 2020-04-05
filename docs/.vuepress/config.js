@@ -46,7 +46,7 @@ module.exports = {
     // 作者头像
     authorAvatar: '/logo.png',
     // 备案号
-    record: 'xxxx',
+    // record: 'xxxx',
     // 项目开始时间
     startYear: '2020'
     /**
@@ -70,5 +70,18 @@ module.exports = {
   },
   markdown: {
     lineNumbers: true
-  }
-}  
+  },
+  plugins: [
+    ['@vuepress-reco/vuepress-plugin-kan-ban-niang', {
+      theme: ["haruto"],
+      clean: true,
+      modelStyle: {
+        position: "fixed",
+        left: "0px",
+        bottom: "0px",
+        opacity: "0.9",
+        zIndex: 99999
+      }
+    }]
+  ]
+}

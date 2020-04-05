@@ -15,4 +15,6 @@ git commit -m 'deploy'
 
 git push -f git@github.com:qqxiaofeizhu/blog.git master:gh-pages
 
+rm -rf public
+
 cd -
