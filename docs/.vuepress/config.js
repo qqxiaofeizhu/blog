@@ -1,5 +1,5 @@
 module.exports = {
-  base: '/blog.io/',
+  base: '/blog/',
   title: "拖延症患者",
   description: '此心光明，亦复何言。',
   dest: 'public',
@@ -32,7 +32,7 @@ module.exports = {
         link: 'https://www.huawei.com/cn/?ic_medium=direct&ic_source=surlent'
       }
     ],
-    repo: 'https://github.com/qqxiaofeizhu/blog.io',
+    repo: 'https://github.com/qqxiaofeizhu/blog',
     logo: '/logo.png',
     // 搜索设置
     search: true,
