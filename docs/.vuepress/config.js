@@ -48,7 +48,7 @@ module.exports = {
     // 备案号
     // record: 'xxxx',
     // 项目开始时间
-    startYear: '2020'
+    startYear: '2020',
     /**
      * 密钥 (if your blog is private)
      */
@@ -66,6 +66,13 @@ module.exports = {
     // valineConfig: {
     //   appId: '...',// your appId
     //   appKey: '...', // your appKey
+    // }
+    // vssueConfig: {
+    //   platform: 'github',
+    //   owner: 'qqxiaofeizhu',
+    //   repo: 'blog',
+    //   clientId: '3c23ccc7a3ffabe4da79',
+    //   clientSecret: '25e549538375929622529ee6157f4fe6d6d83044',
     // }
   },
   markdown: {
