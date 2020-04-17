@@ -67,13 +67,13 @@ module.exports = {
     //   appId: '...',// your appId
     //   appKey: '...', // your appKey
     // }
-    // vssueConfig: {
-    //   platform: 'github',
-    //   owner: 'qqxiaofeizhu',
-    //   repo: 'blog',
-    //   clientId: '3c23ccc7a3ffabe4da79',
-    //   clientSecret: '25e549538375929622529ee6157f4fe6d6d83044',
-    // }
+    vssueConfig: {
+      platform: 'github',
+      owner: 'qqxiaofeizhu',
+      repo: 'blog',
+      clientId: '3c23ccc7a3ffabe4da79',
+      clientSecret: '25e549538375929622529ee6157f4fe6d6d83044',
+    }
   },
   markdown: {
     lineNumbers: true
