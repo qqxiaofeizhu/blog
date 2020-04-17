@@ -1,5 +1,5 @@
 ---
-title: Vue
+title: Vue 基础
 date: 2020-04-15
 tags:
  - vue
@@ -11,7 +11,7 @@ categories:
 
 vue 是一个构造函数，是一个类，它是单例模式
 
-## mvvm && mvc && mvp
+## mvvm & mvc & mvp
 
 `mvc`: `Model-View-Controller`简称`mvc`
 
@@ -42,7 +42,7 @@ activated               组件被激活调用
 deactivated             组件停用时调用
 ```
 
-## v-if & v-show && v-for
+## v-if & v-show & v-for
 
 v-if 是条件渲染，只有符合条件，才会在dom树上显示dom
 
@@ -107,8 +107,72 @@ activated
 deactivated
 ```
 
+## 插槽
+
+1. 默认插槽
+
+```js
+<slot></slot>
+```
+
+2. 后备插槽
+
+```js
+<slot>wjs</slot>
+```
+
+3. 具名插槽
+
+```js
+<slot name="wjs"></slot>
+```
+
+4. 作用域插槽
+
+```js
+<slot name="wjs" v-bind:aa={a:1} v-bind:bb={b:1}></slot>
+```
+
+5. 具名插槽缩写
+
+```js
+#default | #插槽名字
+```
+
+6. 解析作用域插槽
+
+```js
+slotName 为插槽名字，默认为default，可以不写，缩写时需要带上插槽名字
+
+slotProps就是传递props的包裹对象，这个包裹对象可以时任意名称
+
+<tag v-slot="slotProps">{{slotProps}} </tag>
+
+<tag v-slot:slotName="slotProps">{{slotProps}} </tag>
+
+<tag #default="slotProps">{{slotProps}} </tag>
+
+<tag #slotName="slotProps">{{slotProps}} </tag>
+```
+
+7. 结构作用域插槽
+
+```js
+
+slotName 为插槽名字，默认为default，可以不写，缩写时需要带上插槽名字
+
+aa, bb 代表插槽传递过来的 prop
+
+<tag v-slot="{aa, bb}">{{aa}} {{bb}} </tag>
+
+<tag v-slot:slotName="{aa, bb}">{{aa}} {{bb}} </tag>
+
+<tag #slotName="{aa, bb}">{{slotProps}} </tag>
+
+<tag #default="{aa, bb}">{{slotProps}} </tag>
+
+```
+
 ## vnode
 
-## vue 如何实现双向数据绑定
-
-## 如何优化vue项目的加载速度
+虚拟dom分为 普通dom和组件dom，区别就是有无children
