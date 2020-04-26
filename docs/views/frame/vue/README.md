@@ -56,19 +56,6 @@ v-for 与 v-if 一起使用时，v-for的优先级更高，避免在同层使用
 2. watch    监听属性，监控一个属性的变化后所要处理的操作
 3. methods  方法，不具备缓存，每次都会重新运行
 
-## 组件之间通信
-
-```api
-props               父子组件通信,父组件向子组件传递数据
-emit, on            子组件派发事件，父组件监听子组件事件触发后传递的参数
-$refs               获取组件实例
-$root               获取根组件实例
-$parent             获取父组件实例
-$children           获取子组件的实例
-provide & inject    依赖注入
-vuex                官方提供的组件间数据管理状态机
-event bus           new Vue();
-```
 
 ## 模板
 
@@ -176,3 +163,61 @@ aa, bb 代表插槽传递过来的 prop
 ## vnode
 
 虚拟dom分为 普通dom和组件dom，区别就是有无children
+
+## 组件
+
+1. 组件的data为什么必须是一个函数
+
+当组件是可复用的组件时，一个父组件页面内包含多个相同子组件，当一个子组件发生变化时，其他的子组件都会发生对应的变化，使用函数的时，vue会给每个实例返回对象的独立拷贝
+
+2. 全局注册组件&局部注册组件
+
+全局注册组件可以用在任何new Vue创建的根实例以及组件树中所有的子组件模板中
+
+局部注册只能用在当前的模板中
+
+3. 组件之间通信
+
+```api
+props               父子组件通信,父组件向子组件传递数据
+emit, on            子组件派发事件，父组件监听子组件事件触发后传递的参数
+$refs               获取组件实例
+$root               获取根组件实例
+$parent             获取父组件实例
+$children           获取子组件的实例
+provide & inject    依赖注入
+vuex                官方提供的组件间数据管理状态机
+event bus           new Vue();
+```
+
+## 插件
+
+```javascript
+MyPlugin.install = function (Vue, options) {
+  // 1. 添加全局方法或属性
+  Vue.myGlobalMethod = function () {
+    // 逻辑...
+  }
+
+  // 2. 添加全局资源
+  Vue.directive('my-directive', {
+    bind (el, binding, vnode, oldVnode) {
+      // 逻辑...
+    }
+    ...
+  })
+
+  // 3. 注入组件选项
+  Vue.mixin({
+    created: function () {
+      // 逻辑...
+    }
+    ...
+  })
+
+  // 4. 添加实例方法
+  Vue.prototype.$myMethod = function (methodOptions) {
+    // 逻辑...
+  }
+}
+```
