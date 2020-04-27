@@ -280,7 +280,7 @@ function curry(fn, args) {
 
 满足这两个任一一个条件： 接收一个或多个函数作为输入；输出一个函数
 
-## 16. 实现一个简单的promise，是一个高阶函数
+## 16. 实现一个简单的promise
 
 ```js
 Promise.prototype.then(function resolved() { }, function rejected() { });
@@ -294,6 +294,71 @@ Promise.reject                  // 将现有对象转为Promise对象，状态�
 // 优点：将异步操作以同步的状态流程表达出来
 // 总结就是 Promise或者thenable 会按照正常的promise运行，catch可以获取rejected的值，对于不是Promise或者thenable的对象，会原封不动的返回resolve或reject
 ```
+
+```js
+// 三个常量用于表示状态
+const PENDING = 'pending'
+const RESOLVED = 'resolved'
+const REJECTED = 'rejected'
+
+function MyPromise(fn) {
+    const that = this
+    this.state = PENDING
+
+// value 变量用于保存 resolve 或者 reject 中传入的值
+    this.value = null
+
+    // 用于保存 then 中的回调，因为当执行完 Promise 时状态可能还是等待中，这时候应该把 then 中的回调保存起来用于状态改变时使用
+    that.resolvedCallbacks = []
+    that.rejectedCallbacks = []
+
+    function resolve(value) {
+         // 首先两个函数都得判断当前状态是否为等待中
+        if(that.state === PENDING) {
+            that.state = RESOLVED
+            that.value = value
+
+            // 遍历回调数组并执行
+            that.resolvedCallbacks.map(cb=>cb(that.value))
+        }
+    }
+    function reject(value) {
+        if(that.state === PENDING) {
+            that.state = REJECTED
+            that.value = value
+            that.rejectedCallbacks.map(cb=>cb(that.value))
+        }
+    }
+    // 完成以上两个函数以后，我们就该实现如何执行 Promise 中传入的函数了
+    try {
+        fn(resolve,reject)
+    } catch(e){
+        reject(e)
+    }
+}
+
+// 最后我们来实现较为复杂的 then 函数
+MyPromise.prototype.then = function(onFulfilled,onRejected){
+  const that = this
+
+  // 判断两个参数是否为函数类型，因为这两个参数是可选参数
+  onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : v=>v
+  onRejected = typeof onRejected === 'function' ? onRejected : e=>throw e
+
+  // 当状态不是等待态时，就去执行相对应的函数。如果状态是等待态的话，就往回调函数中 push 函数
+  if(this.state === PENDING) {
+      this.resolvedCallbacks.push(onFulfilled)
+      this.rejectedCallbacks.push(onRejected)
+  }
+  if(this.state === RESOLVED) {
+      onFulfilled(that.value)
+  }
+  if(this.state === REJECTED) {
+      onRejected(that.value)
+  }
+}
+```
+
 ## 17. 写一个函数Fn，接收一个参数，返回一个数组，包含n个不重复的随机整数，每个数都要求大于2小于31
 
 ```js
@@ -620,14 +685,18 @@ taro mpvue uni-app wepy kbone
 
 ## 46. new 操作符都做了什么，如何实现
 ```js
-new 运算符：创建一个用户定义的对象类型的实例或具有构造函数的内置对象的实例
+1. 新生成了一个对象
+2. 链接到原型
+3. 绑定 this
+4. 返回新对象
 
-new 运算符会进行如下操作：
-
-创建一个空的简单JavaScript对象（即{}）
-链接该对象（即设置该对象的构造函数）到另一个对象
-将步骤1新创建的对象作为this的上下文
-如果该函数没有返回对象(或 返回基本数据类型)，则返回this
+function create() {
+  let obj = {}
+  let Con = [].shift.call(arguments)
+  obj.__proto__ = Con.prototype
+  let result = Con.apply(obj, arguments)
+  return result instanceof Object ? result : obj
+}
 ```
 
 ## 47. 结构赋值的常用法
@@ -725,9 +794,9 @@ js中继承大体有以下6种：
 寄生式继承
 寄生组合式继承
 ```
-## 59. wondow.onload & document.ready
+## 59. window.onload & document.ready
 
-wondow.onload: 在页面资源（比如图片和媒体资源，它们的加载速度远慢于DOM的加载速度）加载完成之后才执行
+window.onload: 在页面资源（比如图片和媒体资源，它们的加载速度远慢于DOM的加载速度）加载完成之后才执行
 
 document.ready: 在DOM树加载完成后执行
 
@@ -742,57 +811,39 @@ $("input[type='radio']:checked").val();
 $("input[name='id']:checked").val();
 ```
 
-## 61. jquery 
-
-```js
-
-JQUERY Dom
-
-jQuery.append(content)，这个方法用于追加内容，比如$(“div”).append(“<span>hello</span>”);
-jQuery.appendTo(selector)，这个方法和上一个方法相反，比如$(“<span>hello</span>”).appendTo(“#div”)，这个方法其实还有一个隐藏的move作用，即原来的元素被移动了
-jQuery.prepend(content)，跟append()方法相对应，在前面插入
-jQuery.prependTo(selector)，跟上一个方法相反
-jQuery.after(content)，在外部插入，插入到后面，比如$(“#foo”).after(“<span>hello</span>”);
-jQuery.insertAfter(selector)，和上一个方法相反，比如$(“<span>hello</span>”).insertAfter(“#foo”);
-jQuery.before(content)，在外部插入，插入到前面
-jQuery.insertBefore(selector)，跟上一个方法相反
-jQuery.wrapInner(html)，在内部插入标签，比如$(“p”).wrapInner(“<span></span>”);
-jQuery.wrap(html)，在外部插入标签，比如$(“p”).wrap(“<div></div>”)，这样的话，所有的<p>都会被各自的<div>包裹
-jQuery.wrapAll(html)，类似上一个，区别在于，所有的<p>会被同一个<div>包裹
-jQuery.replaceWith(content)，比如$(this).replaceWith(“<div>”+$(this).text()+”</div>”);
-jQuery.replaceAll(selector)，比如$(“<div>hello</div>”).replaceAll(“p”);
-jQuery.empty()，比如$(“p”).empty()，这样的话，会把<p>下面的所有子节点清空
-jQuery.remove(expr)，比如$(“p”).remove()，这样的话，会把所有<p>移除，可以用表达式做参数，进行过滤
-jQuery.clone()，复制一个页面元素
-
-JQUERY CSS
-
-jQuery.css(name)，获取一个css属性的值，比如$(“p”).css(“color”)
-jQuery.css(object)，设置css属性的值，比如$(“p”).css({“color”:”red”,”border”:”1px red solid”});
-jQuery.css(name,value)，设置css属性的值，比如$(“p”).css(“color”,”red”);
-jQuery.toggleClass(class)，反复切换class属性，该方法第一次执行，增加class，然后去除该class，循环
-jQuery.toggleClass(class,switch)，增加一个switch表达式
-jQuery.hasClass(class)，返回boolean
-jQuery.removeClass(class)，删除class
-jQuery.addClass(class)，增加class
-
-
-JQUERY 属性
-
-jQuery.removeAttr(name)
-jQuery.attr(name)，返回属性的值，比如$(“img”).attr(“src”)
-jQuery.attr(key,value)，这是设置属性的值
-jQuery.attr(properties)，也是设置属性的值
-
-JQUERY位置计算相关方法
-
-jQuery.scrollLeft()，设置滚动条偏移，这个方法对可见元素或不可见元素都生效
-jQuery.scrollTop()，设置滚动条偏移，这个方法对可见元素或不可见元素都生效
-jQuery.offset()，计算偏移量，返回值有2个属性，分别是top和left
-jQuery.position()，计算位置，返回值也有2个属性，top和left
-```
 
 ## 62. 说说浏览器和 Node 事件循环的区别
+
+### 浏览器中的event loop
+
+1. 宏任务
+- setTimeout 
+- script 
+- setInterval
+- setImmediate
+- I/O
+- UI rendering
+
+2. 微任务
+- promise
+- process.nextTick
+- Object.observe
+
+执行顺序：
+
+1. 执行同步代码，这属于宏任务
+2. 执行栈为空，查询是否有微任务需要执行
+3. 执行所有微任务
+4. 必要的话渲染 UI
+5. 然后开始下一轮 Event loop，执行宏任务中的异步代码
+
+### Node中的event loop
+
+1. timers
+2. I/O 
+3. poll
+4. check 
+5. close
 
 Node 10以前：
 
@@ -800,6 +851,8 @@ Node 10以前：
 执行完nextTick队列里面的内容
 然后执行完微任务队列的内容
 Node 11以后： 和浏览器的行为统一了，都是每执行一个宏任务就执行完微任务队列。
+
+## 63. 说一下webpack的一些plugin，怎么使用webpack对项目进行优化
 
 ## 个人介绍
 
@@ -811,17 +864,9 @@ Node 11以后： 和浏览器的行为统一了，都是每执行一个宏任务
 
 我这边主要负责的项目是外研通售后服务平台以及各种H5活动，App内嵌H5，运营数据平台。
 
-我有自己的个人职业规划和良好的学习能力，沟通能力以及解决问题的能力，能够独立完成项目的开发及部署调研陌生的技术并应用到项目中。
+我有良好的学习能力，沟通能力以及解决问题的能力，能够独立完成项目的开发及部署调研陌生的技术并应用到项目中。
 
-我的好朋友目前在贵公司工作，经常听他提起贵公司的事情，对贵公司非常向往，现在能有这个机会能参加贵公司的面试，我非常高兴，希望可以
+[内推的话加上这段话，面试官也不知道是否是内推]
+我的好朋友目前在贵公司工作，经常听他提起贵公司的事情，对贵公司非常向往，现在能有这个机会能参加贵公司的面试，我非常高兴
 
-加入到贵公司，为贵公司的发展做出一份自己的贡献
-
-
-个人职业规划
-
-1. 17~19年底学习前端主要技术栈，提升自己的业务水平，独立负责项目开发及部署
-
-2. 20~21年底沉淀自己，巩固自己的基础知识，知道use and why
-
-3. 22~23年学习些后台方面的知识，准备向全栈工程师迈进
+希望可以加入到贵公司，为贵公司的发展做出一份自己的贡献
