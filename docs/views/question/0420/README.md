@@ -7,19 +7,18 @@ categories:
  - question
 ---
 
-## 1. BFC
+## BFC
 
 ```
 块级格式化作用域上下文
 
 作用：
-
 ① 使 BFC 内部浮动元素不会到处乱跑
 ② 和浮动元素产生边界
 ③ 防止容器坍塌
 ```
 
-## 2. 从输入url的地址栏，到页面展示，这中间发生了什么
+## 从输入url的地址栏，到页面展示，这中间发生了什么
 
 ```javascript
 ① DNS 解析，获取到服务器的真实IP地址
@@ -36,7 +35,7 @@ display 将像素发送给GPU，展示在页面上
 ```
 [详细说明](https://www.cnblogs.com/chrislinlin/p/12629820.html)
 
-## 3. 跨域
+## 跨域
 
 1. 什么是同源策略
 
@@ -51,63 +50,82 @@ display 将像素发送给GPU，展示在页面上
 ```js
 1. CORS
 可以使用 CORS 来允许跨源访问。CORS 是 HTTP 的一部分，它允许服务端来指定哪些主机可以从这个服务端加载资源。
-2. JSONP
-创建一个script标签，通过src动态向服务器传递参数和callback函数
-3. nginx 转发 proxy_pass
-```
-4. JSONP 实现
 
-```javascript
+2. JSONP & jquery jsonp
+创建一个script标签，通过src动态向服务器传递参数和callback函数
+
 const request = ({url, data}) => {
-    return new Promise((resolve, reject) => {
-        // key=value&key=value
-        const handleSortArgs = function(data) {
+   return new Promise((resolve, reject) => {
+        let { url, data, jsonpCallback = "callback" } = options;
+        let handleDelData = (data) => {
             let keys = Object.keys(data);
             let len = keys.length;
-            return keys.reduce((pre, currentValue, index) => {
-                let value = data[currentValue];
-                let flag = index !== len - 1 ? '&' : '';
-                return `${pre}${currentValue}=${value}${flag}`
-            })
+            let pre = '';
+            for (let i = 0; i < keys.length; i++) {
+                let value = data[keys[i]];
+                let flag = i !== len - 1 ? '&' : '';
+                pre += `${keys[i]}=${value}${flag}`
+            }
+            return pre;
         }
-        // 创建script
         const script = document.createElement("script");
-        script.src = `${url}?${handleData(data)}&cb=callback`;
+        script.src = `${url}?${handleDelData(data)}&callback=${jsonpCallback}`;
         document.body.appendChild(script);
-        // callback处理
-        window.callback = function(res) {
+        window[jsonpCallback] = (res) => {
             document.body.removeChild(script);
-            delete window.callback;
+            delete window[jsonpCallback];
             resolve(res);
         }
     })
 }
+
+3. nginx 转发 proxy_pass
+
+4. document.domain + iframe
+5. window.name + iframe
+6. postMessage + iframe
+7. web sockets
 ```
 
-## 4. 前端性能优化问题
+## 前端性能优化
 
-1. CDN外链加载资源
-2. 避免使用CSS表达式
-3. 减少DOM的访问
-4. 减少301 302 DNS解析会消耗时间
-5. nginx开启gzip模式
-6. 代码层
+1. 减少请求资源大小或者次数
+- 尽量和并和压缩css和js文件。（将css文件和并为一个。将js合并为一个）
+- 尽量所使用的字体图标或者SVG图标来代替传统png图
+- 采用图片的懒加载（延迟加载）
+- 避免引入第三方大量的库
+- 减少对cookie的使用
+- 前端与后端协商，合理使用keep-alive
+- 前端与服务器协商，使用响应资源的压缩
+- 避免使用iframe
 
-## 5. js 的基本数据类型有哪些
+2. 代码优化相关
+- 在js中尽量减少闭包的使用（使用闭包后，闭包所在的上下文不会被释放）
+- 减少对DOM操作，主要是减少DOM的重绘与回流
+- 减少css表达式的使用
+- 尽量将一个动画元素单独设置为一个图层
+- 使用window.requestAnimationFrame(js的帧动画)代替传统的定时器动画
+- 基于script标签下载js文件时，可以使用defer或者async来异步加载
+
+3. 存储
+- 结合后端，利用浏览器的缓存技术，做一些缓存
+- 利用h5的新特性（localStorage、sessionStorage）做一些简单数据的存储
+
+## js 的基本数据类型有哪些
 
 ```js
 undefined null Boolean String Number Symbol
 Array Object //引用数据类型
 ```
 
-## 6. 如何判断一个变量是什么类型
+## 如何判断一个变量是什么类型
 
 ```js
 typeof 可以判断出 undefined Boolean String Number Symbol
 Object.prototype.toString.call
 let isType = type => obj => Object.prototype.toString.call(obj) === '[object ' + type + ']';
 ```
-## 7. 数组常用的操作有哪些，都有什么含义怎么使用
+## 数组常用的操作有哪些，都有什么含义怎么使用
 
 ```js
 push                // 向数组的末尾添加一个元素，返回当前数组的长度
@@ -135,7 +153,7 @@ Array.of            // 将参数中的值转化为数组
 Array.from          // 将类数组（必须以下标为key，并且有length属性）或者可迭代的对象转化为数组
 Array.isArray       // 是否是数组
 ```
-## 8. 数据的拷贝有哪些方式
+## 数据的拷贝有哪些方式
 
 ```js
 1. slice        // 只能拷贝不含引用数据类型，浅拷贝
@@ -143,7 +161,7 @@ Array.isArray       // 是否是数组
 3. 深拷贝
 ```
 
-## 9. 对象的拷贝有哪些方式
+## 对象的拷贝有哪些方式
 
 ```js
 1. Object.assign            // 浅拷贝，拷贝的引用地址
@@ -151,7 +169,7 @@ Array.isArray       // 是否是数组
 3. 深拷贝
 ```
 
-## 10. 深拷贝实现
+## 深拷贝实现
 
 ```js
 function DeepCopy(obj) {
@@ -165,19 +183,17 @@ function DeepCopy(obj) {
     return copy;
 }
 ```
-## 11.setTimeout Promise async await的区别
+## setTimeout Promise async await的区别
 
-```js
 setTimeout 是定时器，在事件循环机制中属于宏任务，在指定时间后执行callback函数
+
 Promise 是同步的立即执行函数，只有在执行resolve和reject才是异步任务，属于事件循环机制中的微任务，Promise 拥有三个状态（pedding, resolve, reject），且状态一旦发生改变就会固定下来
+
 async await 是generator 的语法糖， async 返回的是一个promise函数，遇到await 就会先返回await的结果，再继续向下执行，将主线程让出
-```
 
-## 12. event Loop
+## call, apply, bind
 
-事件循环机制，是浏览器解决单线程阻塞的一种处理机制，在程序中，主线程不断循环从任务队列中读取事件，称为事件循环
-
-## 13. call, apply, bind
+call、apply、bind的作用是改变函数运行时this的指向
 
 ```javascript
 Function.prototype.call = function (context) {
@@ -213,10 +229,8 @@ Function.prototype.bind = function (context) {
 }
 ```
 
-## 14. 函数柯里化
+## 偏函数 & 函数柯里化
 
-```js
-偏函数 & 函数柯里化 区别：
 偏函数(局部应用)是固定一个函数的一个或者多个参数，也就是将一个 n 元函数转换成一个 n - x 元函数。
 
 柯里化是将一个多参数函数转换成多个单参数函数，也就是将一个 n 元函数转换成 n 个一元函数。
@@ -225,6 +239,7 @@ Function.prototype.bind = function (context) {
 
 偏函数(局部应用) 和 函数柯里化 尽管很像，但是却是js中两种处理函数的技术。
 
+```js
 经典面试题
 
 实现一个add方法，使计算结果能够满足如下预期：
@@ -232,6 +247,7 @@ Function.prototype.bind = function (context) {
   add(1, 2, 3)(4) = 10
   add(1)(2)(3)(4)(5) = 15
   add(2, 6)(1) = 9  
+
 提示：函数柯里化、偏函数、call、arguments、隐式转换
 
 function add() {
@@ -254,7 +270,7 @@ function add() {
 }
 ```
 
-```js 
+```js
 function curry(fn, args) {
     let length = fn.length
     args = args || [];
@@ -276,11 +292,15 @@ function curry(fn, args) {
 }
 ```
 
-## 15. 高阶函数
+## 高阶函数
 
-满足这两个任一一个条件： 接收一个或多个函数作为输入；输出一个函数
+满足这两个任一一个条件
 
-## 16. 实现一个简单的promise
+1. 接收一个或多个函数作为输入
+
+2. 函数作为输出结果
+
+## promise
 
 ```js
 Promise.prototype.then(function resolved() { }, function rejected() { });
@@ -295,8 +315,10 @@ Promise.reject                  // 将现有对象转为Promise对象，状态�
 // 总结就是 Promise或者thenable 会按照正常的promise运行，catch可以获取rejected的值，对于不是Promise或者thenable的对象，会原封不动的返回resolve或reject
 ```
 
+### 实现一个Promise
+
 ```js
-// 三个常量用于表示状态
+
 const PENDING = 'pending'
 const RESOLVED = 'resolved'
 const REJECTED = 'rejected'
@@ -305,7 +327,7 @@ function MyPromise(fn) {
     const that = this
     this.state = PENDING
 
-// value 变量用于保存 resolve 或者 reject 中传入的值
+    // value 变量用于保存 resolve 或者 reject 中传入的值
     this.value = null
 
     // 用于保存 then 中的回调，因为当执行完 Promise 时状态可能还是等待中，这时候应该把 then 中的回调保存起来用于状态改变时使用
@@ -313,7 +335,7 @@ function MyPromise(fn) {
     that.rejectedCallbacks = []
 
     function resolve(value) {
-         // 首先两个函数都得判断当前状态是否为等待中
+        // 首先两个函数都得判断当前状态是否为等待中
         if(that.state === PENDING) {
             that.state = RESOLVED
             that.value = value
@@ -343,7 +365,7 @@ MyPromise.prototype.then = function(onFulfilled,onRejected){
 
   // 判断两个参数是否为函数类型，因为这两个参数是可选参数
   onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : v=>v
-  onRejected = typeof onRejected === 'function' ? onRejected : e=>throw e
+  onRejected = typeof onRejected === 'function' ? onRejected : e => throw e
 
   // 当状态不是等待态时，就去执行相对应的函数。如果状态是等待态的话，就往回调函数中 push 函数
   if(this.state === PENDING) {
@@ -359,7 +381,7 @@ MyPromise.prototype.then = function(onFulfilled,onRejected){
 }
 ```
 
-## 17. 写一个函数Fn，接收一个参数，返回一个数组，包含n个不重复的随机整数，每个数都要求大于2小于31
+## 写一个函数Fn，接收一个参数，返回一个数组，包含n个不重复的随机整数，每个数都要求大于2小于31
 
 ```js
 function Fn(n, min, max) {
@@ -388,23 +410,51 @@ function isRepeat(rand, arr) {
     return false;
 }
 ```
-## 18. 原型链
+## 原型链
+
+1、所有的引用类型对象(数组，对象，函数)都有一个__proto__属性
+
+2、所有的函数（除了箭头函数）都有一个prototype属性
+
+3、所有的引用类型（数组、对象、函数），__proto__属性值指向它的构造函数的 prototype 属性值
+
+原型是用来继承类的属性和方法
+
+proto 将每个对象串联起来，形成的链条，称为原型链，原型链的终点是null
 
 ```js
-构造函数 function Xx() { };
-原型 Xx.prototype
-实例  new Xx;
-JS 构造 函数都包含一个原型对象，原型对象都包含一个指向构造函数的constructor, 实例都包含指向原型对象的指针__proto__
-new Xx.__proto__ == Xx.prototype  Xx.prototype.constructor == Xx;
+实例化.__proto__ == 类.prototype  类.prototype.constructor == 类;
 ```
-## 19. 为什么遇到script标签，会阻塞渲染
+
+## 作用域及作用域链
+
+ES5作用域分为全局作用域以及函数作用域, ES6中作用域又增加了一个块级作用域
+
+作用域链是指当前作用域没有找到定义的方法或者变量、继续向父级作用域继续寻找，直到找到全局作用域为止，这种层级的查找关系，称为作用域链
+
+## 执行上下文
+
+JS执行上下文分为全局执行上下文和函数执行上下文
+
+1、全局执行上下文
+
+在解析js代码时，创建一个全局的执行上下文环境，把代码中即将执行的（函数内部不算）变量、函数声明都拿出来，先声明再赋值
+
+2、函数执行上下文
+
+与全局执行上下文之间的区别就是多了this指针以及arguments参数， this的指向在函数执行时已经被确定了
+
+## 为什么遇到script标签，会阻塞渲染
 
 js是单线程，多线程模式，常见的线程包含GUI线程，JS引擎线程，事件触发线程，定时触发器线程，HTTP线程，其中JS引擎线程和GUI引擎线程互斥，当解析JS时，GUI会被挂起
 
-## 20. 节流和防抖
+## 节流和防抖
+
+节流：指连续触发事件但是在 n 秒中只执行一次函数
+
+常用场景：鼠标不断点击触发，mousedown(单位时间内只触发一次); 监听滚动事件，比如是否滑到底部自动加载更多，用throttle来判断
 
 ```js
-// 在一定的时间只执行一次
 const throttle = function (fn, wait = 50) {
     let previous = 0;
     return function () {
@@ -415,7 +465,13 @@ const throttle = function (fn, wait = 50) {
         }
     }
 }
-// 防抖 函数在某段时间内，无论触发多少次，都执行最后一次
+```
+
+防抖：就是指触发事件后在 n 秒内函数只能执行一次，如果在 n 秒内又触发了事件，则会重新计算函数执行时间。
+
+常用场景：search搜索联想，用户在不断输入值时，用防抖来节约请求资源；window触发resize的时候，不断的调整浏览器窗口大小会不断的触发这个事件
+
+```js
 function debounce(fn, wait, immediate) {
     let timer = null;
     return function () {
@@ -432,7 +488,7 @@ function debounce(fn, wait, immediate) {
 }
 ```
 
-## 21. ['1', '2', '3'].map(parseInt)
+## ['1', '2', '3'].map(parseInt)
 
 ```js
 map 中接收的是一个函数(currentItem, index, arr); parseInt(value, radix) 
@@ -450,28 +506,23 @@ parseInt('2', 1);
 parseInt('3', 2)
 ```
 
-## 22. 有以下 3 个判断数组的方法，请分别介绍它们之间的区别和优劣
+## 有以下 3 个判断数组的方法，请分别介绍它们之间的区别和优劣
 
 ```js
 1. Object.prototype.toString.call
 2. Array.isArray    // es6 提供
 3. instanceof       // 判断该原型链上能不能找到该对象的原型对象 prototype
 
-const obj = {}
-obj.__proto__ = Array.prototype
-// Object.setPrototypeOf(obj, Array.prototype)
-obj instanceof Array // true
-
 总结：Array.isArray 存在兼容性的问题，instanceof 很容易改变原型对象的指向
 ```
 
-## 23. var 和 不用 var 声明的区别
+## var 和 不用 var 声明的区别
 
 使用var声明的变量的作用域是它当前的执行上下文，可以是局部变量也可以式全局变量
 
 给未声明的变量赋值，该变量被隐式的创建为全局对象下的属性，可以用delete删掉
 
-## 24. 下面的代码打印什么内容，为什么？
+## 下面的代码打印什么内容，为什么？
 
 ```js
 var b = 10;
@@ -503,7 +554,7 @@ console.log(window.a); // 10
 a = 20;
 console.log(a);   // 20
 ```
-## 25. 输出以下代码执行的结果并解释为什么
+## 输出以下代码执行的结果并解释为什么
 
 ```js
 var obj = {
@@ -520,15 +571,15 @@ console.log(obj)
 [empty, empty, 1, 2]
 ```
 
-## 26. cookie 和 token 都存放在 header 中，为什么不会劫持 token？
+## cookie 和 token 都存放在 header 中，为什么不会劫持 token？
 
 每次请求服务器都会自动带上cookie, 不会自动带上token，需要手动在header中设置token
 
-## 27. 写 React / Vue 项目时为什么要在列表组件中写 key，其作用是什么？
+## 写 React / Vue 项目时为什么要在列表组件中写 key，其作用是什么？
 
 key的作用就是更新组件时判断两个节点是否相同。相同就复用，不相同就删除旧的创建新的。
 
-## 28. 介绍下深度优先遍历和广度优先遍历，如何实现？
+## 介绍下深度优先遍历和广度优先遍历，如何实现？
 
 解析：深度优先遍历是自上而下的遍历，广度优先遍历是逐层进行遍历的
 
@@ -550,7 +601,7 @@ key的作用就是更新组件时判断两个节点是否相同。相同就复�
 
 广度优先则采用的是队列的形式, 即先进先出
 
-## 29. 快速排序
+## 快速排序
 
 快速排序也叫二分法，是比较基础的排序算法，思想是找出数组中的中间元素，将该元素从数组中取出，遍历数组，将比基准点小的值放在左侧，大的放在右侧
 
@@ -576,7 +627,7 @@ function quickSort(arr) {
 }
 ```
 
-## 30. 冒泡排序
+## 冒泡排序
 
 冒泡排序的思想是相邻的进行对比，然后置换其对象的位置
 
@@ -603,38 +654,8 @@ function bubbleSort(arr) {
     return arr;
 }
 ```
-## 31. 左右布局，左右+上下布局，盒子模型，css定位属性，flex布局
 
-```js
-css单位 (eg: px, vw, vh)
-position 定位: static(默认值)、absolute、relative、fixed、inherit(从父元素继承position的值)
-```
-
-## 32. css实现一个对话框样式
-
-## 33. 如何改变placeholder样式
-
-## 34. 元素如何垂直水平居中
-
-## 35. 获取选中radio的值
-
-## 36. 编写js函数，用于测试输入的字符穿是否如下格式 xxx-xxx-xxxx-0(x为0-9的数字)
-
-正则的扩展
-
-```js
-/\d{3}-\d{3}-\d{4}-0/;
-```
-
-## 37. forEach实现
-
-## 38. proxy 和 defineProperty
-
-## 39. koa洋葱模型
-
-## 40. express koa 中间件（middleware）
-
-## 41. post 和 get 的区别
+## post 和 get 的区别
 
 ```js
 GET的请求参数直接在页面上显示，post请求参数在http body体中
@@ -643,30 +664,17 @@ GET请求可以被浏览器缓存，POST请求不行
 GET只允许ASCII字符，POST请求不会
 ```
 
-## 42. 前端加密
+## 前端加密
 
 常用加密有MD5,AES,RSA
 
-```js
 AES 是对称加密，使用相同的密钥去解密
+
 RSA 是非对称加密，公钥加密，私钥解密
 
-前端生成AES密钥，获取后端RSA公钥
-RSA公钥加密数据和AES密钥，传递到后台，后台RSA解密解密出AES密钥，再用AES密钥解析传递的数据
-后台用AES加密数据，前端使用保存的AES进行解密
-```
+前端生成AES密钥，获取后端RSA公钥，RSA公钥加密数据和AES密钥，传递到后台，后台RSA解密解密出AES密钥，再用AES密钥解析传递的数据，后台用AES加密数据，前端使用保存的AES进行解密
 
-## 43. 小程序setData优化问题
-
-## 44. 小程序框架对比
-
-```javascript
-taro mpvue uni-app wepy kbone
-
-因为不会react，只能选择mpvue 及 uni-app mpvue更新太慢，基本无人维护 uni-app社区比较好，功能比较全，还可以多端适配
-```
-
-## 45. http状态码
+## http状态码
 
 ```js
 200 ok
@@ -683,7 +691,7 @@ taro mpvue uni-app wepy kbone
 502 网关错误，服务未启动
 ```
 
-## 46. new 操作符都做了什么，如何实现
+## new 操作符都做了什么，如何实现
 ```js
 1. 新生成了一个对象
 2. 链接到原型
@@ -699,7 +707,7 @@ function create() {
 }
 ```
 
-## 47. 结构赋值的常用法
+## 结构赋值的常用法
 
 ```js
 1. 数组解构
@@ -709,31 +717,7 @@ function create() {
 5. 数值和布尔的结构 
 ```
 
-## 48. class 继承的几种方式
-
-## 49. vue react diff算法
-
-## 50. react的生命周期
-
-**
-
-## 51. pwa
-
-** 支持不多
-
-## 52. 缓存
-
-**
-
-## 53. 推送
-
-**
-
-## 54. 通知
-
-**
-
-## 55. 移动端你遇到的兼容性问题
+## 移动端你遇到的兼容性问题
 
 1. 安卓软键盘遮挡
 
@@ -760,14 +744,14 @@ meta标签 viewport-fit=cover
 }
 ```
 
-## 56. require & import
+## require & import
 
 node 编程中最重要的是模块化思想，require 和 import 都是用于模块化的。
 
-require：运行时调用，所以随处可以使用。是commonJs的
+require：运行时调用，所以随处可以使用。属于commonJs的规范
 import：编译时调用，所以只能在开头引入。目前一些浏览器不支持es6，需要使用babel将其转换成es5使用(eg: 把 import 转换成 require)。是es6的
 
-## 57. http 和 https 的区别
+## http 和 https 的区别
 
 ```js
 https协议需要到ca申请证书，所以需要一定的费用
@@ -777,7 +761,7 @@ https协议是ssl+http协议构建的可进行加密传输、身份认证的网�
 http协议默认的端口是80，https协议默认的端口是443
 ```
 
-## 58. js继承
+## js继承
 
 ```js
 
@@ -794,7 +778,7 @@ js中继承大体有以下6种：
 寄生式继承
 寄生组合式继承
 ```
-## 59. window.onload & document.ready
+## window.onload & document.ready
 
 window.onload: 在页面资源（比如图片和媒体资源，它们的加载速度远慢于DOM的加载速度）加载完成之后才执行
 
@@ -802,8 +786,7 @@ document.ready: 在DOM树加载完成后执行
 
 也就是说$(document).ready要比window.onload先执行。$(function(){}) 和 $(document).ready(function(){}) 是一个方法，$(function(){})为简写
 
-
-## 60. 如何获取radio的值
+## 如何获取radio的值
 
 ```js
 $('input:radio:checked').val()；
@@ -811,8 +794,9 @@ $("input[type='radio']:checked").val();
 $("input[name='id']:checked").val();
 ```
 
+## 说说浏览器和 Node 事件循环的区别
 
-## 62. 说说浏览器和 Node 事件循环的区别
+event loop 指的是事件循环机制，是浏览器或者 nodeJS的一种 javascript 解决单线程运行不会阻塞的一种处理机制；在程序中，主线程不断循环从"任务队列"中读取事件, 这种运行机制被称为Event Loop（事件循环）。
 
 ### 浏览器中的event loop
 
@@ -837,7 +821,7 @@ $("input[name='id']:checked").val();
 4. 必要的话渲染 UI
 5. 然后开始下一轮 Event loop，执行宏任务中的异步代码
 
-### Node中的event loop
+### Node中的 event loop
 
 1. timers
 2. I/O 
@@ -847,12 +831,11 @@ $("input[name='id']:checked").val();
 
 Node 10以前：
 
-执行完一个阶段的所有任务
-执行完nextTick队列里面的内容
-然后执行完微任务队列的内容
-Node 11以后： 和浏览器的行为统一了，都是每执行一个宏任务就执行完微任务队列。
+执行完一个阶段的所有任务，执行完nextTick队列里面的内容，然后执行完微任务队列的内容
 
-## 63. 说一下webpack的一些plugin，怎么使用webpack对项目进行优化
+Node 11以后和浏览器的行为统一了，都是每执行一个宏任务就执行完微任务队列。
+
+## 说一下webpack的一些plugin，怎么使用webpack对项目进行优化
 
 ## 个人介绍
 
@@ -867,6 +850,7 @@ Node 11以后： 和浏览器的行为统一了，都是每执行一个宏任务
 我有良好的学习能力，沟通能力以及解决问题的能力，能够独立完成项目的开发及部署调研陌生的技术并应用到项目中。
 
 [内推的话加上这段话，面试官也不知道是否是内推]
+
 我的好朋友目前在贵公司工作，经常听他提起贵公司的事情，对贵公司非常向往，现在能有这个机会能参加贵公司的面试，我非常高兴
 
 希望可以加入到贵公司，为贵公司的发展做出一份自己的贡献

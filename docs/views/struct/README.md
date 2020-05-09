@@ -12,9 +12,10 @@ categories:
 
 - [栈 Stack](./stack.md)
 - [队列 Queue](./queue.md)
-- 链表（Linked List）
+- [链表](./linkedList.md)
 - 图（Graph）
 - 散列表（Hash）
-- 树（Tree）
+- [树](./tree.md)
 - 堆（Heap）
-
+- [字典](./dictionary.md)
+- [集合](./set.md)
