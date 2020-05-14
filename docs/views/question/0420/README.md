@@ -7,16 +7,26 @@ categories:
  - question
 ---
 
-## BFC
+愿所有的梦想都能开出最美的花朵
 
-```
-块级格式化作用域上下文
+## JS为什么会出现异步
 
-作用:
-① 使 BFC 内部浮动元素不会到处乱跑
-② 和浮动元素产生边界
-③ 防止容器坍塌
-```
+扩展：
+
+线程：是操作系统能够进行运算调度的最小单位。它被包含在进程之中，是进程中的实际运作单位
+
+进程：进程是一个具有一定独立功能的程序在一个数据集上的一次动态执行的过程
+
+js最初的设计是单线程模式，主要用途是与用户互动，以及操作DOM，单线程是为了保证DOM过程中的唯一性，js代码的执行由上而下解析运行，遇到耗时长的方法会等待其返回再继续向下执行，为了更好的和用户进行交互，引入了事件循环机制，将程序分为同步任务和异步任务，异步任务通常用户处理页面耗时较长且暂时不需要立即执行的函数
+
+虽然js是单线程的，但是浏览器是多线程的，常见的线程有GUI渲染线程，JavaScript解析线程，事件处理线程
+
+异步虽然解决了JS因执行耗时长出现程序运行阻塞问题，但是由于很多时候需要在异步响应后进行对应操作，所以为了更好的处理异步有以下解决方案
+
+1. callback
+2. Promise
+3. async awiat
+4. 发布订阅
 
 ## 从输入url的地址栏，到页面展示，这中间发生了什么
 
@@ -29,10 +39,10 @@ categories:
 ⑥ 根据 render tree 进行布局
 
 layout 回流 根据render tree, 进行回流，得到元素节点的几何信息
-repaint 根据render tree以及 layout 得到的几何信息，得到节点的绝对像素
+repaint 根据render tree 以及 layout 得到的几何信息，得到节点的绝对像素
 display 将像素发送给GPU，展示在页面上
-
 ```
+
 [详细说明](https://www.cnblogs.com/chrislinlin/p/12629820.html)
 
 ## 跨域
@@ -80,7 +90,6 @@ const request = ({url, data}) => {
 }
 
 3. nginx 转发 proxy_pass
-
 4. document.domain + iframe
 5. window.name + iframe
 6. postMessage + iframe
@@ -90,6 +99,7 @@ const request = ({url, data}) => {
 ## 前端性能优化
 
 1. 减少请求资源大小或者次数
+
 - 尽量和并和压缩css和js文件。（将css文件和并为一个。将js合并为一个）
 - 尽量所使用的字体图标或者SVG图标来代替传统png图
 - 采用图片的懒加载（延迟加载）
@@ -100,6 +110,7 @@ const request = ({url, data}) => {
 - 避免使用iframe
 
 2. 代码优化相关
+
 - 在js中尽量减少闭包的使用（使用闭包后，闭包所在的上下文不会被释放）
 - 减少对DOM操作，主要是减少DOM的重绘与回流
 - 减少css表达式的使用
@@ -108,6 +119,7 @@ const request = ({url, data}) => {
 - 基于script标签下载js文件时，可以使用defer或者async来异步加载
 
 3. 存储
+
 - 结合后端，利用浏览器的缓存技术，做一些缓存
 - 利用h5的新特性（localStorage、sessionStorage）做一些简单数据的存储
 
@@ -122,7 +134,9 @@ Array Object //引用数据类型
 
 ```js
 typeof 可以判断出 undefined Boolean String Number Symbol
-Object.prototype.toString.call
+instanceof 运算符用于检测构造函数的 prototype 属性是否出现在某个实例对象的原型链上。 也可以理解为是否为某个对象的实例
+也可以理解为是否为某个对象的实例
+Object.prototype.toString.call 最合适判断
 let isType = type => obj => Object.prototype.toString.call(obj) === '[object ' + type + ']';
 ```
 ## 数组常用的操作有哪些，都有什么含义怎么使用
@@ -364,8 +378,8 @@ MyPromise.prototype.then = function(onFulfilled,onRejected){
   const that = this
 
   // 判断两个参数是否为函数类型，因为这两个参数是可选参数
-  onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : v=>v
-  onRejected = typeof onRejected === 'function' ? onRejected : e => throw e
+  onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : v => v
+  onRejected = typeof onRejected === 'function' ? onRejected : e => { throw e }
 
   // 当状态不是等待态时，就去执行相对应的函数。如果状态是等待态的话，就往回调函数中 push 函数
   if(this.state === PENDING) {
@@ -412,11 +426,11 @@ function isRepeat(rand, arr) {
 ```
 ## 原型链
 
-1、所有的引用类型对象(数组，对象，函数)都有一个__proto__属性
+1、除了null,undefined 之外的所有对象都有一个__proto__属性
 
 2、所有的函数（除了箭头函数）都有一个prototype属性
 
-3、所有的引用类型（数组、对象、函数），__proto__属性值指向它的构造函数的 prototype 属性值
+3、除了null,undefined 之外的所有对象__proto__属性值指向它的构造函数的 prototype 属性值
 
 原型是用来继承类的属性和方法
 
@@ -424,6 +438,64 @@ proto 将每个对象串联起来，形成的链条，称为原型链，原型�
 
 ```js
 实例化.__proto__ == 类.prototype  类.prototype.constructor == 类;
+```
+
+## js继承
+
+```js
+
+许多OOP语言(面向对象语言)，都有支持两种继承方式：接口继承 & 实现继承。
+接口继承 继承的是 方法签名，实现继承 继承的是实际的方法。
+由于js中方法没有签名，所以在es中无法实现接口继承，es只支持实现继承，而且其实现继承主要是依靠原型链 来实现的。
+
+js中继承大体有以下6种：
+// 定义一个动物类
+function Animal (name) {
+　　// 属性
+　　this.name = name || 'Animal';
+　　// 实例方法
+　　this.sleep = function(){
+　　console.log(this.name + '正在睡觉！');
+　　}
+}
+// 原型方法
+Animal.prototype.eat = function(food) {
+　　console.log(this.name + '正在吃：' + food);
+};
+
+原型继承
+
+function Cat() {}
+Cat.prototype = new Aniaml();
+
+借用构造函数继承
+
+function Cat() {Aniaml.aplly(this, arguments)};
+
+组合继承
+
+function Cat() {Aniaml.aplly(this, arguments)};
+Cat.prototype = Aniaml.prototype;
+
+寄生组合式继承
+
+寄生： 在函数内返回对象然后调用
+组合： 1、函数的原型等于另一个实例。2、在函数中用apply或者call引入另一个构造函数，可传参　
+
+function crate(obj) {
+    function f() {};
+    f.prototype = obj;
+    return new f();
+}
+
+function Cat() {
+    Aniaml.apply(this, arguments);
+}
+
+Cat.prototype = crate(Aniaml.prototype);
+Cat.prototype.constructor = Cat;
+
+Es6 中的 class 继承
 ```
 
 ## 作用域及作用域链
@@ -662,6 +734,7 @@ GET的请求参数直接在页面上显示，post请求参数在http body体中
 GET请求有长度的限制，POST请求没有限制
 GET请求可以被浏览器缓存，POST请求不行
 GET只允许ASCII字符，POST请求不会
+GET回退浏览器无害，POST会再次提交请求(get请求会被缓存，可以直接从缓存中获取资源)
 ```
 
 ## 前端加密
@@ -761,23 +834,6 @@ https协议是ssl+http协议构建的可进行加密传输、身份认证的网�
 http协议默认的端口是80，https协议默认的端口是443
 ```
 
-## js继承
-
-```js
-
-许多OOP语言(面向对象语言)，都有支持两种继承方式：接口继承 & 实现继承。
-接口继承 继承的是 方法签名，实现继承 继承的是实际的方法。
-由于js中方法没有签名，所以在es中无法实现接口继承，es只支持实现继承，而且其实现继承主要是依靠原型链 来实现的。
-
-js中继承大体有以下6种：
-
-构造函数类继承
-原型链继承
-组合继承
-原型式继承
-寄生式继承
-寄生组合式继承
-```
 ## window.onload & document.ready
 
 window.onload: 在页面资源（比如图片和媒体资源，它们的加载速度远慢于DOM的加载速度）加载完成之后才执行
