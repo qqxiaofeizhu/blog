@@ -310,9 +310,15 @@ function curry(fn, args) {
 
 满足这两个任一一个条件
 
-1. 接收一个或多个函数作为输入
+1. 接收一个或多个函数作为输入[函数被作为参数传入]
 
 2. 函数作为输出结果
+
+常见的高阶函数
+
+闭包，map，filter, reduce, sort[升降序]
+
+高阶函数的好处
 
 ## promise
 
@@ -458,34 +464,58 @@ function Animal (name) {
 　　console.log(this.name + '正在睡觉！');
 　　}
 }
-// 原型方法
+
 Animal.prototype.eat = function(food) {
 　　console.log(this.name + '正在吃：' + food);
 };
 
-原型继承
+原型链继承
 
 function Cat() {}
 Cat.prototype = new Aniaml();
 
+缺点：1. 子类的实例不能向父类传递参数
+     2. 引用类型的属性被所有实例共享
+
 借用构造函数继承
 
-function Cat() {Aniaml.aplly(this, arguments)};
+function Cat() { Aniaml.aplly(this, arguments) };
+
+缺点：1. 方法都在构造函数中定义，每次创建实例都会创建一遍方法
+     2. 不能继承到父类原型上的属性和方法
 
 组合继承
 
-function Cat() {Aniaml.aplly(this, arguments)};
+function Cat() { Aniaml.aplly(this, arguments) };
 Cat.prototype = Aniaml.prototype;
+
+缺点：1. 调用了两次父类，占用的内存较大
+
+原型式继承 类 Object.create;
+
+function create(f) {
+    function F() {};
+    F.prototype = f;
+    return new F();
+}
+
+缺点： 包含引用类型的属性值始终都会共享相应的值
+
+寄生式继承
+
+function parasitism(f) {
+    let _f = create(f);
+    return _f;
+}
+
+缺点：跟借用构造函数模式一样，每次创建对象都会创建一遍方法。
 
 寄生组合式继承
 
-寄生： 在函数内返回对象然后调用
-组合： 1、函数的原型等于另一个实例。2、在函数中用apply或者call引入另一个构造函数，可传参　
-
-function crate(obj) {
-    function f() {};
-    f.prototype = obj;
-    return new f();
+function crate(f) {
+    function F() {};
+    F.prototype = f;
+    return new F();
 }
 
 function Cat() {
@@ -496,6 +526,12 @@ Cat.prototype = crate(Aniaml.prototype);
 Cat.prototype.constructor = Cat;
 
 Es6 中的 class 继承
+
+class Cat extends Aniaml {
+    constructor() {
+        super(...arguments)
+    }
+} 
 ```
 
 ## 作用域及作用域链
