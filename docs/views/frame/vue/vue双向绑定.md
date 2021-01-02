@@ -59,7 +59,7 @@ class PubSub {
     constructor() {
         this.subs = [];
     }
-
+    
     // 订阅一个事件
     subscribe(key, fn) {
         if (!this.subs[key]) {

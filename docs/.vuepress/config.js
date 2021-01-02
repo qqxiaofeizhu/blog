@@ -30,10 +30,6 @@ module.exports = {
       {
         title: '华为',
         link: 'https://www.huawei.com/cn/?ic_medium=direct&ic_source=surlent'
-      },
-      {
-        title: '奔跑吧骚年',
-        link: 'http://blog.poetries.top/FE-Interview-Questions/'
       }
     ],
     repo: 'https://github.com/qqxiaofeizhu/blog',
