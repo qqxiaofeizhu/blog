@@ -1,11 +1,6 @@
 ---
-title: 集合 
+title: 集合
 sidebar: false
-date: 2020-04-20
-tags:
- - struct
-categories:
- - struct
 ---
 
 ## 代码实现

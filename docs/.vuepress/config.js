@@ -14,7 +14,6 @@ module.exports = {
       { text: '走马观花', link: '/timeline/', icon: 'reco-date' }
     ],
     type: 'blog',
-    huawei: true,
     // 博客设置
     blogConfig: {
       category: {
@@ -24,7 +23,8 @@ module.exports = {
       tag: {
         location: 3, // 在导航栏菜单中所占的位置，默认3
         text: '标签' // 默认 “标签”
-      }
+      },
+      socialLinks: []
     },
     friendLink: [
       {
@@ -38,7 +38,7 @@ module.exports = {
     search: true,
     searchMaxSuggestions: 10,
     // 自动形成侧边导航
-    sidebar: 'auto',
+    subSidebar: 'auto',
     // 最后更新时间
     lastUpdated: 'Last Updated',
     // 作者
@@ -89,6 +89,14 @@ module.exports = {
         opacity: "0.9",
         zIndex: 99999
       }
-    }]
+    }],
+    [
+      'dynamic-title',
+      {
+        showText: '(/≧▽≦/)咦！又好了！',
+        hideText: '(●—●)喔哟，崩溃啦！',
+        recoverTime: 2000,
+      },
+    ],
   ]
 }

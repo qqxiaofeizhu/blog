@@ -7,6 +7,10 @@ categories:
  - typescript
 ---
 
+TypeScript 是 JavaScript 的一个超集，主要提供了类型系统和对 ES6 的支持
+
+<!-- more -->
+
 # 什么是TypeScript
 
 TypeScript 是 JavaScript 的一个超集，主要提供了类型系统和对 ES6 的支持
