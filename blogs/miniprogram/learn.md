@@ -2,7 +2,7 @@
 title: 小程序api文档学习
 date: 2020-04-14
 tags:
- - miniprogram
+ - 小程序
 categories:
  - miniprogram
 ---

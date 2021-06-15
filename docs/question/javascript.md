@@ -1,4 +1,6 @@
-## js
+---
+title: JavaScript篇
+---
 
 ### js 的基本数据类型有哪些
 
@@ -91,6 +93,8 @@ this的显式绑定call()、bind()、apply()
 5.箭头函数绑定
 
 箭头函数是没有this的，箭头函数中的this只取决于包裹箭头函数的第一个普通函数的this
+
+在严格模式下函数体内的this指向undefined;
 
 ### call, apply, bind
 

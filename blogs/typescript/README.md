@@ -1,26 +1,32 @@
 ---
-title: typescript学习 
+title: typescript学习
 date: 2021-01-10
 tags:
- - typescript
+  - typescript
 categories:
- - typescript
+  - typescript
 ---
 
 TypeScript 是 JavaScript 的一个超集，主要提供了类型系统和对 ES6 的支持
 
 <!-- more -->
 
-# 什么是TypeScript
+# 什么是 TypeScript
 
 TypeScript 是 JavaScript 的一个超集，主要提供了类型系统和对 ES6 的支持
 
 > TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. Any browser. Any host. Any OS. Open source.
-TypeScript 是 JavaScript 的类型的超集，它可以编译成纯 JavaScript。编译出来的 JavaScript 可以运行在任何浏览器上。TypeScript 编译工具可以运行在任何服务器和任何系统上。TypeScript 是开源的。
+> TypeScript 是 JavaScript 的类型的超集，它可以编译成纯 JavaScript。编译出来的 JavaScript 可以运行在任何浏览器上。TypeScript 编译工具可以运行在任何服务器和任何系统上。TypeScript 是开源的。
+
+[ts 简易教程-传送门](https://ts.xcatliu.com/)
+
+## ts 脑图
+
+<img src="./images/naotu.jpeg">
 
 ## 类型
 
-在typescript中，类型可以分为基本类型和枚举类型
+在 typescript 中，类型可以分为基本类型和枚举类型
 
 ### 基本类型
 
@@ -31,35 +37,35 @@ TypeScript 是 JavaScript 的类型的超集，它可以编译成纯 JavaScript�
 - 元组类型（tuple）
 - 函数类型（fuction）
 - 对象类型 (object)
-- symbol类型
-- void类型
-- any类型
+- symbol 类型
+- void 类型
+- any 类型
 - null 和 undefined
-- never类型
+- never 类型
 
 #### 数字类型
 
-和JavaScript一样，TypeScript里的所有数字都是浮点数。 这些浮点数的类型是number。 除了支持十进制和十六进制字面量，TypeScript还支持ECMAScript 2015中引入的二进制和八进制字面量。
+和 JavaScript 一样，TypeScript 里的所有数字都是浮点数。 这些浮点数的类型是 number。 除了支持十进制和十六进制字面量，TypeScript 还支持 ECMAScript 2015 中引入的二进制和八进制字面量。
 
 ```ts
-let num:number = 123;
-num = 0b1101 // 二进制
-num = 0o164 // 八进制
-num = 0x8b // 十六进制
+let num: number = 123;
+num = 0b1101; // 二进制
+num = 0o164; // 八进制
+num = 0x8b; // 十六进制
 ```
 
 #### 字符串类型
 
-和JavaScript一样，可以使用双引号（"）或单引号（'）表示字符串。
+和 JavaScript 一样，可以使用双引号（"）或单引号（'）表示字符串。
 
 ```ts
-let str:string = 'wjs';
+let str: string = "wjs";
 ```
 
 #### 布尔类型
 
 ```ts
-let bool:boolean = true;
+let bool: boolean = true;
 ```
 
 #### 数组类型
@@ -67,18 +73,18 @@ let bool:boolean = true;
 有两种方式可以定义数组。 第一种，可以在元素类型后面接上[]，表示由此类型元素组成的一个数组
 
 ```ts
-let arr:number[] = [1,2,3];
-let arr:string[] = ['1','2','3'];
-let arr:(string|number)[] = [1,'2',3] // 数组中元素只能为string或者number类型
-let arr:any[] = [1, '2', true]; // 数组中的元素为任意类型
+let arr: number[] = [1, 2, 3];
+let arr: string[] = ["1", "2", "3"];
+let arr: (string | number)[] = [1, "2", 3]; // 数组中元素只能为string或者number类型
+let arr: any[] = [1, "2", true]; // 数组中的元素为任意类型
 ```
 
 第二种方式是使用数组泛型，Array<元素类型>：
 
 ```ts
-let arr:Array<number>= [1,2,3];
-let arr:Array<number|string>= [1, '2', '3'];
-let arr:Array<any> = [1, '2', true];
+let arr: Array<number> = [1, 2, 3];
+let arr: Array<number | string> = [1, "2", "3"];
+let arr: Array<any> = [1, "2", true];
 ```
 
 #### 元组
@@ -88,13 +94,13 @@ let arr:Array<any> = [1, '2', true];
 元组中允许存储不同类型的元素，元组可以作为参数传递给函数。
 
 ```ts
-let x:[string, number];
-x = ['123', 123];
-x = [123, '123'] // error
+let x: [string, number];
+x = ["123", 123];
+x = [123, "123"]; // error
 
-或者
+或者;
 
-let x:[string, number] = ['123', 123];
+let x: [string, number] = ["123", 123];
 ```
 
 其它的操作方法和数组一致
@@ -108,45 +114,47 @@ let func = (param?: type): type {};
 #### object
 
 ```ts
-let obj: {param: type} = {param: typeValue};
+let obj: { param: type } = { param: typeValue };
 ```
 
 #### symbol
 
 ```ts
-let sym:symbol = Symbol();
+let sym: symbol = Symbol();
 ```
 
 #### 空值 void
 
-void类型像是与any类型相反，它表示没有任何类型。 当一个函数没有返回值时，你通常会见到其返回值类型是void
+void 类型像是与 any 类型相反，它表示没有任何类型。 当一个函数没有返回值时，你通常会见到其返回值类型是 void
 
 ```ts
-let a = ():void => {console.log('xxx')};
+let a = (): void => {
+  console.log("xxx");
+};
 ```
 
-声明一个void类型的变量没有什么大用，因为你只能为它赋予undefined和null;
+声明一个 void 类型的变量没有什么大用，因为你只能为它赋予 undefined 和 null;
 
 ```ts
-let v:void;
-v = undefined // OK
+let v: void;
+v = undefined; // OK
 ```
 
 #### any
 
-any表示当前变量可能是任何类型
+any 表示当前变量可能是任何类型
 
 ```ts
-let a:any = '123';
+let a: any = "123";
 a = true;
-a = [1,23,4];
+a = [1, 23, 4];
 ```
 
 尽量少的使用 any, 否则你可能在用 AnyScript 写代码
 
 #### null 和 undefined
 
-TypeScript里，undefined和null两者各自有自己的类型分别叫做undefined和null, 是string的子类型
+TypeScript 里，undefined 和 null 两者各自有自己的类型分别叫做 undefined 和 null, 是 string 的子类型
 
 ```ts
 let n:null = null;
@@ -155,14 +163,14 @@ let u:undefined: undefined;
 
 #### never
 
-never表示永不存在的值，出现在死循环或者异常程序中
+never 表示永不存在的值，出现在死循环或者异常程序中
 
 ```ts
 function getError(message: string): never {
-    throw new Error(message);
+  throw new Error(message);
 }
 function infiniteFunc(): never {
-    while (true) {}
+  while (true) {}
 }
 ```
 
@@ -177,13 +185,13 @@ function infiniteFunc(): never {
 
 #### 数字枚举
 
-没有初始化值，默认从0开始自增
+没有初始化值，默认从 0 开始自增
 
 ```ts
 enum Role {
-    a,
-    b, 
-    c
+  a,
+  b,
+  c,
 }
 // Role.a === 0;
 // Role.c === 2;
@@ -193,9 +201,9 @@ enum Role {
 
 ```ts
 enum Role {
-    a,
-    b = 5, 
-    c
+  a,
+  b = 5,
+  c,
 }
 // Role.a === 0;
 // Role.b === 5;
@@ -206,10 +214,10 @@ enum Role {
 
 ```ts
 enum Role {
-    a,
-    b = '5', 
-    // c = 3; // 枚举成员必须具有初始化表达式
-    c = 'wjs'
+  a,
+  b = "5",
+  // c = 3; // 枚举成员必须具有初始化表达式
+  c = "wjs",
 }
 // Role.a === 0;
 // Role.b === 5;
@@ -222,9 +230,9 @@ enum Role {
 
 ```ts
 enum Role {
-    SUPER = '超级管理员',
-    ADMIN = '管理员',
-    USER = '用户'
+  SUPER = "超级管理员",
+  ADMIN = "管理员",
+  USER = "用户",
 }
 ```
 
@@ -234,12 +242,12 @@ enum Role {
 
 ```ts
 enum Answer {
-    N,
-    Y = 'yes'
+  N,
+  Y = "yes",
 }
 ```
 
-除非你真的想要利用JavaScript运行时的行为，否则我们不建议这样做。
+除非你真的想要利用 JavaScript 运行时的行为，否则我们不建议这样做。
 
 #### 枚举成员
 
@@ -254,11 +262,11 @@ enum Answer {
 
 ```ts
 const enum Month {
-    Jan,
-    Feb,
-    Mar
+  Jan,
+  Feb,
+  Mar,
 }
-const month:number[] = [Month.Jan, Month.Feb, Month]
+const month: number[] = [Month.Jan, Month.Feb, Month];
 ```
 
 #### 枚举类型
@@ -269,9 +277,18 @@ const month:number[] = [Month.Jan, Month.Feb, Month]
 第三种情况，所有成员都是字符串枚举。
 
 ```ts
-enum E { a, b }
-enum F { a = 0, b = 1 }
-enum G { a = 'apple', b = 'banana' }
+enum E {
+  a,
+  b,
+}
+enum F {
+  a = 0,
+  b = 1,
+}
+enum G {
+  a = "apple",
+  b = "banana",
+}
 ```
 
 ### 类型断言
@@ -301,17 +318,17 @@ let strLength: number = (str as string).length;
 对象的属性包含可选属性和只读属性，只读属性不允许被赋值
 
 ```ts
-interface obj{
-    name: string,
-    age?: number,
-    readonly sex: number
+interface obj {
+  name: string;
+  age?: number;
+  readonly sex: number;
 }
 
-let obj:obj = {
-    name: 'wjs',
-    age: 25,
-    sex: 1
-}
+let obj: obj = {
+  name: "wjs",
+  age: 25,
+  sex: 1,
+};
 // obj.sex = 0; // 无法分配到age, 因为它是只读属性
 ```
 
@@ -366,11 +383,13 @@ let obj:obj {
 
 ```ts
 interface F {
-    (name: string, age: number):void;
+  (name: string, age: number): void;
 }
-let f:F = (name, age) => {console.log(name, age)};
+let f: F = (name, age) => {
+  console.log(name, age);
+};
 
-f('wjs', 25);
+f("wjs", 25);
 ```
 
 ### 混合类型接口
@@ -385,8 +404,8 @@ interface Counter {
 }
 
 fuction getCounter(): Counter {
-  let counter = <Counter>function (start: number) { }; 
-  // 或者写成这样 let counter = function (start: number) { } as Counter; 
+  let counter = <Counter>function (start: number) { };
+  // 或者写成这样 let counter = function (start: number) { } as Counter;
   counter.interval = 123;
   counter.reset = function () { };
   return counter;
@@ -409,79 +428,18 @@ c.interval = 5.0;
 
 ```ts
 interface Fruit {
-    name: string
+  name: string;
 }
 
 interface Apple extends Fruit {
-    color: string
+  color: string;
 }
 
 let apple: Apple = {
-    color: 'red',
-    name: 'apple'
-}
+  color: "red",
+  name: "apple",
+};
 
 console.log(apple.color); // red
 console.log(apple.name); // apple
 ```
-
-### 接口继承类
-
-
-## 函数
-
-### 定义函数
-
-### 函数传参数
-
-### 函数重载
-
-## 类
-
-### 基本实现
-
-### 继承
-
-### 成员修饰符
-
-### 构造函数中修饰符
-
-### 抽象类
-
-### this类型
-
-## 泛型
-
-### 支持多种泛型方法
-
-### 泛型函数
-
-### 泛型接口
-
-### 泛型类
-
-### 泛型约束
-
-## 类型检查
-
-### 类型推断
-
-### 类型断言
-
-### 类型兼容性
-
-### 类型保护
-
-## 高级类型
-
-### 交叉类型
-
-### 联合类型
-
-### 字面量类型
-
-### 索引类型
-
-### 映射类型
-
-### 条件类型

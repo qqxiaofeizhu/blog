@@ -4,7 +4,7 @@ date: 2021-02-18
 tags:
  - redux
 categories:
- - react
+ - frame
 ---
 
 拓展：[大白话解析Redux](https://github.com/lulujianglab/blog/issues/34)

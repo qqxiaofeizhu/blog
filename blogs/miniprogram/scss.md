@@ -3,7 +3,7 @@ title: 小程序内使用 scss
 date: 2020-04-14
 sidebar: false
 tags:
- - miniprogram
+ - 小程序
 categories:
  - miniprogram
 ---
